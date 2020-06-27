@@ -1,4 +1,4 @@
-# price-checker-backend
+# price-checker-api
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2020?style=flat-square)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
@@ -28,6 +28,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.2] - 2020-06-28
+
+### Changed
+
+- README.md title
 
 ## [0.2.1] - 2020-06-28
 
