@@ -3,8 +3,7 @@
 ![Maintenance](https://img.shields.io/maintenance/yes/2020?style=flat-square)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://github.com/octavian-regatun/price-checker-backend/blob/master/LICENSE.md)
-![Travis (.com) branch](https://img.shields.io/travis/com/octavian-regatun/price-checker-backend/master?style=flat-square)
-[![Code Style](https://badgen.net/badge/code%20style/airbnb/ff5a5f?icon=airbnb)](https://github.com/airbnb/javascript)
+[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg?style=flat-square)](https://github.com/xojs/xo)
 
 This is a API that will search products on all the specified <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flag_of_Romania.svg/1200px-Flag_of_Romania.svg.png" width="16"> Romanian <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flag_of_Romania.svg/1200px-Flag_of_Romania.svg.png" width="16"> shopping sites and returns an array with information about the products found.
 
@@ -28,6 +27,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.3.0] - 2020-07-1
+
+### Changed
+
+- rename request function to requestFirstPage
 
 ## [0.2.3] - 2020-06-29
 
