@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2020-07-1
 
+### Added
+
+- add requestAllPages function to PcGarage API
+
 ### Changed
 
 - rename request function from PcGarage API to requestFirstPage
