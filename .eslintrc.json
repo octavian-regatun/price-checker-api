@@ -7,5 +7,7 @@
 	},
 	"extends": ["xo", "plugin:prettier/recommended"],
 	"parser": "babel-eslint",
-	"rules": {}
+	"rules": {
+		"no-await-in-loop":"off"
+	}
 }
