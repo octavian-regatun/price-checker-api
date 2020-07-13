@@ -4,12 +4,24 @@ const fetch = require('node-fetch');
 class PcGarage {
 	static URL = 'https://www.pcgarage.ro/cauta';
 
+	static #getHTML = async (search) => {
+		try {
+			const $ = await fetch(`${this.URL}/${search}`, { method: 'GET' })
+				.then((response) => response.text())
+				.then((body) => cheerio.load(body));
+
+			return $;
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	static #getProductData = ($products) => {
 		const products = [];
 		for (const $product of $products) {
 			const $ = cheerio.load($product);
 
-			const stock = $('.pb-price-container').children().eq(2).text();
+			const stock = $('.product_box_availability').text();
 
 			if (stock.trim() !== 'Nu este in stoc') {
 				let price = $('.price').text();
@@ -18,32 +30,38 @@ class PcGarage {
 				price = price.replace(',', '.');
 				price = Number.parseFloat(price);
 
-				const name = $('.pb-name').eq(0).children().eq(0).attr('title');
+				const name = $('.product_box_name').children().attr('title');
 
-				const imgSrc = $('img').eq(0).attr('src');
+				let imgSrc = $('img').eq(0).attr('srcset');
+				imgSrc = imgSrc.split(',')[0];
 
-				products.push({ name, price, imgSrc });
+				let link = $('.product_box')
+					.children()
+					.first()
+					.children('a')
+					.attr('href');
+
+				products.push({ name, price, imgSrc, link });
 			}
 		}
 
 		return products;
 	};
 
-	static async request(search) {
-		let $;
-		try {
-			$ = await fetch(`${this.URL}/${search}`, { method: 'GET' })
-				.then((response) => response.text())
-				.then((body) => cheerio.load(body));
-		} catch (error) {
-			console.log(error);
-		}
+	static #isPageNumberButton = async ($) => {
+		console.log($('.pagination').first().children().length);
+	};
 
-		const $products = $('.product-box-container').get();
+	static async requestFirstPage(search) {
+		const $ = await this.#getHTML(search);
+
+		const $products = $('.product_box_container').get();
 
 		const response = { products: this.#getProductData($products) };
 
 		return response;
 	}
+
+
 }
 module.exports = PcGarage;
