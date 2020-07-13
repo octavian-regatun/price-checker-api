@@ -61,7 +61,5 @@ class PcGarage {
 
 		return response;
 	}
-
-
 }
 module.exports = PcGarage;
