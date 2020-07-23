@@ -94,7 +94,7 @@ class PcGarage {
 				price = price.replace(',', '.');
 				price = parseFloat(price);
 
-				const name = $('.product_box_name').children().attr('title');
+				const name = $('.product_box_name').children().children().attr('title');
 
 				let imgSrc = $('img').eq(0).attr('srcset');
 				imgSrc = imgSrc.split(',')[0];
