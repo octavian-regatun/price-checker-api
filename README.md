@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2020-07-23
+
+### Changed
+
+- update PcGarage API acordingly to the site changes
+
 ## [0.3.0] - 2020-07-1
 
 ### Added
@@ -37,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - rename request function from PcGarage API to requestFirstPage
-- update PcGarage API acordingly to the site updates
+- update PcGarage API acordingly to the site changes
 
 ## [0.2.3] - 2020-06-29
 
