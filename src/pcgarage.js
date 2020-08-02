@@ -3,6 +3,8 @@ const fetch = require('node-fetch');
 const delay = require('delay');
 
 class PcGarage {
+  static URL = 'https://www.pcgarage.ro/cauta';
+
   static CATEGORIES = {
     laptop: {},
     mobile: {},
@@ -19,18 +21,6 @@ class PcGarage {
     },
     gaming: {},
     televizoare: {}
-  };
-
-  static URL = 'https://www.pcgarage.ro/cauta';
-
-  static #getHTMLForRoute = async (route) => {
-    const $ = await fetch(`${this.URL}/${route}`, { method: 'GET' })
-      .then((response) => {
-        return response.text();
-      })
-      .then((body) => cheerio.load(body));
-
-    return $;
   };
 
   static #getHTMLForSearch = async (search, wantURL = false) => {
@@ -55,6 +45,48 @@ class PcGarage {
       .then((body) => cheerio.load(body));
 
     return $;
+  };
+
+  static #getHTMLForRoute = async (route) => {
+    const $ = await fetch(`${this.URL}/${route}`, { method: 'GET' })
+      .then((response) => {
+        return response.text();
+      })
+      .then((body) => cheerio.load(body));
+
+    return $;
+  };
+
+  static #getProductData = ($products) => {
+    const products = [];
+    for (const $product of $products) {
+      const $ = cheerio.load($product);
+
+      const stock = $('.product_box_availability').text();
+
+      if (stock.trim() !== 'Nu este in stoc') {
+        let price = $('.price').text();
+        price = price.replace(' RON', '');
+        price = price.replace('.', '');
+        price = price.replace(',', '.');
+        price = parseFloat(price);
+
+        const name = $('.product_box_name').children().children().attr('title');
+
+        let imgSrc = $('img').eq(0).attr('srcset');
+        imgSrc = imgSrc.split(',')[0];
+
+        let link = $('.product_box')
+          .children()
+          .first()
+          .children('a')
+          .attr('href');
+
+        products.push({ name, price, imgSrc, link });
+      }
+    }
+
+    return products;
   };
 
   static #isPageNumberButton = ($, pageNumber) => {
@@ -108,37 +140,15 @@ class PcGarage {
     }
   };
 
-  static #getProductData = ($products) => {
-    const products = [];
-    for (const $product of $products) {
-      const $ = cheerio.load($product);
+  static async requestFirstPage(search) {
+    const $ = await this.#getHTMLForSearch(search);
 
-      const stock = $('.product_box_availability').text();
+    const $products = $('.product_box_container').get();
 
-      if (stock.trim() !== 'Nu este in stoc') {
-        let price = $('.price').text();
-        price = price.replace(' RON', '');
-        price = price.replace('.', '');
-        price = price.replace(',', '.');
-        price = parseFloat(price);
+    console.log(`Products have been loaded!`);
 
-        const name = $('.product_box_name').children().children().attr('title');
-
-        let imgSrc = $('img').eq(0).attr('srcset');
-        imgSrc = imgSrc.split(',')[0];
-
-        let link = $('.product_box')
-          .children()
-          .first()
-          .children('a')
-          .attr('href');
-
-        products.push({ name, price, imgSrc, link });
-      }
-    }
-
-    return products;
-  };
+    return { products: this.#getProductData($products) };
+  }
 
   static async requestAllPages(search) {
     const { $, url: URL } = await this.#getHTMLForSearch(search, true);
@@ -162,16 +172,6 @@ class PcGarage {
     }
 
     return response;
-  }
-
-  static async requestFirstPage(search) {
-    const $ = await this.#getHTMLForSearch(search);
-
-    const $products = $('.product_box_container').get();
-
-    console.log(`Products have been loaded!`);
-
-    return { products: this.#getProductData($products) };
   }
 }
 
