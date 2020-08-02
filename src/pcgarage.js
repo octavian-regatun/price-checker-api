@@ -23,6 +23,16 @@ class PcGarage {
 
   static URL = 'https://www.pcgarage.ro/cauta';
 
+  static #getHTMLForRoute = async (route) => {
+    const $ = await fetch(`${this.URL}/${route}`, { method: 'GET' })
+      .then((response) => {
+        return response.text();
+      })
+      .then((body) => cheerio.load(body));
+
+    return $;
+  };
+
   static #getHTMLForSearch = async (search, wantURL = false) => {
     let url;
     const $ = await fetch(`${this.URL}/${search}`, { method: 'GET' })
