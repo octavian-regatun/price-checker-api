@@ -3,6 +3,24 @@ const fetch = require('node-fetch');
 const delay = require('delay');
 
 class PcGarage {
+  static CATEGORIES = {
+    laptop: {},
+    mobile: {},
+    componente: {
+      placiVideo: 'placi-video',
+      procesoare: 'procesoare',
+      placiDeBaza: 'placi-de-baza',
+      memorii: 'memorii',
+      ssd: 'ssd',
+      hardDiskUri: 'hard-disk-uri',
+      surse: 'surse',
+      carcase: 'carcase',
+      coolere: 'coolere'
+    },
+    gaming: {},
+    televizoare: {}
+  };
+
   static URL = 'https://www.pcgarage.ro/cauta';
 
   static #getHTMLForSearch = async (search, wantURL = false) => {
