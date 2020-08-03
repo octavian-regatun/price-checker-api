@@ -9,6 +9,7 @@
   "parser": "babel-eslint",
   "rules": {
     "no-await-in-loop": "off",
-    "no-constructor-return": "off"
+    "no-constructor-return": "off",
+    "no-new": "off"
   }
 }
