@@ -183,7 +183,7 @@ class PcGarage {
     let productsInTotal = 0;
 
     for (let i = 1; i <= totalNumberOfPages; i++) {
-      const { $, url: pageURL } = await this.#getHTMLForPage(url, i);
+      const { $, url: pageURL } = await this.#getHTMLForPage(url, i, true);
 
       const $products = $('.product_box_container').get();
 
@@ -226,7 +226,7 @@ class PcGarage {
     let productsInTotal = 0;
 
     for (let i = 1; i <= totalNumberOfPages; i++) {
-      const { $, url: pageURL } = await this.#getHTMLForPage(url, i);
+      const { $, url: pageURL } = await this.#getHTMLForPage(url, i, true);
 
       const $products = $('.product_box_container').get();
 
