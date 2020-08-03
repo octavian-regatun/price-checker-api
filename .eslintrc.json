@@ -1,13 +1,14 @@
 {
-	"env": {
-		"browser": true,
-		"commonjs": true,
-		"es2020": true,
-		"node": true
-	},
-	"extends": ["xo", "plugin:prettier/recommended"],
-	"parser": "babel-eslint",
-	"rules": {
-		"no-await-in-loop":"off"
-	}
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2020": true,
+    "node": true
+  },
+  "extends": ["xo", "plugin:prettier/recommended"],
+  "parser": "babel-eslint",
+  "rules": {
+    "no-await-in-loop": "off",
+    "no-constructor-return": "off"
+  }
 }
