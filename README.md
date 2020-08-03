@@ -28,6 +28,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2020-08-3
+
+### Added
+
+- add requestByCategory function to PcGarage API
+- added categories:
+    - Componente:
+        - Placi video
+        - Procesoare
+        - Placi de baza
+        - Memorii
+        - SSD
+        - Hard disk-uri
+        - Surse
+        - Carcase
+        - Coolere
+        
+
 ## [0.3.1] - 2020-07-23
 
 ### Changed
