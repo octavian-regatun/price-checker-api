@@ -39,32 +39,36 @@ class PcGarage {
     return $;
   };
 
-  static #getHTMLForPage = async (URL, page) => {
+  static #getHTMLForPage = async (URL, page, wantURL = false) => {
+    let url;
     const $ = await fetch(`${URL}/pagina${page}`, { method: 'GET' })
-      .then((response) => response.text())
-      .then((body) => cheerio.load(body));
-
-    return $;
-  };
-
-  static #getHTMLForRoute = async (route) => {
-    const $ = await fetch(`${this.URL}/${route}`, { method: 'GET' })
       .then((response) => {
+        url = response.url;
         return response.text();
       })
       .then((body) => cheerio.load(body));
+
+    if (wantURL) {
+      return { $, url };
+    }
 
     return $;
   };
 
   static #getProductData = ($products) => {
     const products = [];
+
+    const productsInTotal = $products.length;
+    let productsInStock = 0;
+
     for (const $product of $products) {
       const $ = cheerio.load($product);
 
       const stock = $('.product_box_availability').text();
 
       if (stock.trim() !== 'Nu este in stoc') {
+        productsInStock++;
+
         let price = $('.price').text();
         price = price.replace(' RON', '');
         price = price.replace('.', '');
@@ -76,17 +80,26 @@ class PcGarage {
         let imgSrc = $('img').eq(0).attr('srcset');
         imgSrc = imgSrc.split(',')[0];
 
-        let link = $('.product_box')
+        let url = $('.product_box')
           .children()
           .first()
           .children('a')
           .attr('href');
 
-        products.push({ name, price, imgSrc, link });
+        products.push({
+          name,
+          price,
+          imgSrc,
+          url
+        });
       }
     }
 
-    return products;
+    return {
+      products,
+      productsInStock: productsInStock,
+      productsInTotal: productsInTotal
+    };
   };
 
   static #isPageNumberButton = ($, pageNumber) => {
@@ -141,37 +154,104 @@ class PcGarage {
   };
 
   static async requestFirstPage(search) {
-    const $ = await this.#getHTMLForSearch(search);
+    const { $, url } = await this.#getHTMLForSearch(search, true);
 
     const $products = $('.product_box_container').get();
 
-    console.log(`Products have been loaded!`);
+    console.log(`Products from the first page have been loaded!`);
 
-    return { products: this.#getProductData($products) };
+    return {
+      pageURL: url,
+      productsInStock: this.#getProductData($products).productsInStock,
+      productsInTotal: this.#getProductData($products).productsInTotal,
+      products: this.#getProductData($products).products
+    };
   }
 
-  static async requestAllPages(search) {
-    const { $, url: URL } = await this.#getHTMLForSearch(search, true);
-
-    await delay(5000);
+  static async requestAllPages(search, delayTime = 2000) {
+    const { $, url } = await this.#getHTMLForSearch(search, true);
 
     const totalNumberOfPages = this.#howManyPagesAre($);
 
-    let response = [];
+    console.log(`There are ${totalNumberOfPages} pages in total`);
+
+    let pages = [];
+
+    await delay(delayTime);
+
+    let productsInStock = 0;
+    let productsInTotal = 0;
 
     for (let i = 1; i <= totalNumberOfPages; i++) {
-      const $ = await this.#getHTMLForPage(URL, i);
+      const { $, url: pageURL } = await this.#getHTMLForPage(url, i);
 
       const $products = $('.product_box_container').get();
 
-      response.push({ page: i, products: this.#getProductData($products) });
+      pages.push({
+        page: i,
+        pageURL,
+        productsInStock: this.#getProductData($products).productsInStock,
+        productsInTotal: this.#getProductData($products).productsInTotal,
+        products: this.#getProductData($products)
+      });
+
+      productsInStock += this.#getProductData($products).productsInStock;
+      productsInTotal += this.#getProductData($products).productsInTotal;
 
       console.log(`Products from page ${i} have been loaded!`);
 
-      await delay(5000);
+      await delay(delayTime);
     }
 
-    return response;
+    return {
+      productsInStock,
+      productsInTotal,
+      pagesInTotal: totalNumberOfPages,
+      pages
+    };
+  }
+
+  static async requestByCategory(category, delayTime = 2000) {
+    const { $, url } = await this.#getHTMLForSearch(category, true);
+
+    const totalNumberOfPages = this.#howManyPagesAre($);
+
+    console.log(`There are ${totalNumberOfPages} pages in total`);
+
+    let pages = [];
+
+    await delay(delayTime);
+
+    let productsInStock = 0;
+    let productsInTotal = 0;
+
+    for (let i = 1; i <= totalNumberOfPages; i++) {
+      const { $, url: pageURL } = await this.#getHTMLForPage(url, i);
+
+      const $products = $('.product_box_container').get();
+
+      pages.push({
+        page: i,
+        pageURL: pageURL,
+        productsInStock: this.#getProductData($products).productsInStock,
+        productsInTotal: this.#getProductData($products).productsInTotal,
+        products: this.#getProductData($products)
+      });
+
+      productsInStock += this.#getProductData($products).productsInStock;
+      productsInTotal += this.#getProductData($products).productsInTotal;
+
+      console.log(`Products from page ${i} have been loaded!`);
+
+      await delay(delayTime);
+    }
+
+    return {
+      productsInStock,
+      productsInTotal,
+      pagesInTotal: totalNumberOfPages,
+      pages
+    };
   }
 }
 
