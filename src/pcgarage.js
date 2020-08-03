@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
 const delay = require('delay');
+const CustomLog = require('./warning');
 
 class PcGarage {
   static URL = 'https://www.pcgarage.ro/cauta';
@@ -158,7 +159,7 @@ class PcGarage {
 
     const $products = $('.product_box_container').get();
 
-    console.log(`Products from the first page have been loaded!`);
+    CustomLog.info(`Products from the first page have been loaded!`);
 
     return {
       pageURL: url,
@@ -173,7 +174,7 @@ class PcGarage {
 
     const totalNumberOfPages = this.#howManyPagesAre($);
 
-    console.log(`There are ${totalNumberOfPages} pages in total`);
+    CustomLog.info(`There are ${totalNumberOfPages} pages in total`);
 
     let pages = [];
 
@@ -198,7 +199,7 @@ class PcGarage {
       productsInStock += this.#getProductData($products).productsInStock;
       productsInTotal += this.#getProductData($products).productsInTotal;
 
-      console.log(`Products from page ${i} have been loaded!`);
+      CustomLog.info(`Products from page ${i} have been loaded!`);
 
       await delay(delayTime);
     }
@@ -216,7 +217,7 @@ class PcGarage {
 
     const totalNumberOfPages = this.#howManyPagesAre($);
 
-    console.log(`There are ${totalNumberOfPages} pages in total`);
+    CustomLog.info(`There are ${totalNumberOfPages} pages in total`);
 
     let pages = [];
 
@@ -241,7 +242,7 @@ class PcGarage {
       productsInStock += this.#getProductData($products).productsInStock;
       productsInTotal += this.#getProductData($products).productsInTotal;
 
-      console.log(`Products from page ${i} have been loaded!`);
+      CustomLog.info(`Products from page ${i} have been loaded!`);
 
       await delay(delayTime);
     }
